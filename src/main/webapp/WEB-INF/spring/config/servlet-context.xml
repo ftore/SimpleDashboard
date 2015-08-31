@@ -14,7 +14,7 @@
 	<!-- Enables the Spring MVC @Controller programming model -->
 	<mvc:annotation-driven />
 	
-	<context:component-scan base-package="net.kinx.cdnportal" />
+	<context:component-scan base-package="com.example.dashboard" />
 
 	<!-- Handles HTTP GET requests for /resources/** by efficiently serving up static resources in the ${webappRoot}/resources directory -->
 	<mvc:resources mapping="/resources/**" location="/resources/" />
@@ -23,6 +23,21 @@
 	<bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
 		<property name="prefix" value="/WEB-INF/views/" />
 		<property name="suffix" value=".jsp" />
+	</bean>
+	<!-- Message will be lookup here -->
+	<bean id="messageSource"
+		class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+		<property name="basenames">
+			<list>
+				<value>classpath:config/messages/messages</value>
+			</list>
+		</property>
+		<property name="useCodeAsDefaultMessage" value="true" />
+		<property name="cacheSeconds">
+			<value>86400</value>
+		</property>
+		<property name="fileEncodings" value="UTF-8" />
+		<property name="defaultEncoding" value="UTF-8" />
 	</bean>
 	
 </beans>

@@ -15,9 +15,8 @@
         <property name="configLocation" value="classpath:/config/mybatis-config.xml"></property>
     </bean>
     
-    <!-- <mybatis:scan base-package="net.kinx.cdnportal.mapper" /> -->
     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-		<property name="basePackage" value="net.kinx.cdnportal.mapper" />
+		<property name="basePackage" value="com.example.dashboard.mappers" />
 	</bean>
  
 </beans>

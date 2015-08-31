@@ -22,6 +22,6 @@
     </settings>
      
     <typeAliases>
-        <typeAlias alias="Content" type="net.kinx.cdnportal.domain.Content"/>
+        <typeAlias alias="Content" type="com.example.dashboard.domain.Content"/>
     </typeAliases>
 </configuration>

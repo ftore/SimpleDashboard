@@ -3,11 +3,8 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-	<!-- DataSource -->
-    <alias name="dataSource-${Globals.DbType}" alias="dataSource" />
-    
 	<!-- mysql -->
-    <bean id="dataSource-mysql" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
         <property name="driverClassName" value="${Globals.DriverClassName}"/>
         <property name="url" value="${Globals.Url}" />
         <property name="username" value="${Globals.UserName}"/>
