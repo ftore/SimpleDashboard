@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="net.kinx.cdnportal.mapper.ContentMapper">
+
+  <cache />
+ 
+  <select id="getContentListAdmin" parameterType="Content" resultType="Content">
+  	SELECT
+  		boardid as boardId,
+  		CASE 
+  			WHEN LENGTH(title) > 50 THEN CONCAT(LEFT(title, 50), '...')
+  			ELSE title
+  		END title,
+  		DATE_FORMAT(created, '%Y.%m.%d %H:%i') created,
+  		creator,
+  		published,
+  		hits
+  	FROM
+  		board
+  	<if test="searchWrd != null and searchWrd != ''">
+	WHERE
+		title LIKE CONCAT('%', #{searchWrd},'%')
+	</if>
+  	ORDER BY
+  		board.created DESC
+  	LIMIT #{recordCountPerPage} OFFSET #{firstIndex}
+  </select>
+  <select id="getContentListAdminCnt" parameterType="Content" resultType="int">
+  	SELECT
+  		COUNT(boardid) as CNT
+  	FROM
+  		board
+  	<if test="searchWrd != null and searchWrd != ''">
+	WHERE
+		title LIKE CONCAT('%', #{searchWrd},'%')
+	</if>
+  </select>
+  <insert id="insertContent" parameterType="Content" useGeneratedKeys="true" keyProperty="boardId">
+  	INSERT INTO board (
+  		title,
+  		contents,
+  		creator
+  	) VALUES (
+  		#{title},
+  		#{contents},
+  		#{creator}
+  	)
+  </insert>
+  <update id="updatePublished" parameterType="Content">
+  	UPDATE
+  		board
+  	SET
+  		published = #{published}
+  	WHERE
+  		boardid = #{boardId}
+  </update>
+  <delete id="deleteContent" parameterType="Content">
+  	DELETE FROM
+  		board
+  	WHERE
+  		boardid = #{boardId}
+  </delete>
+  <select id="getContentById" parameterType="int" resultType="Content">
+  	SELECT
+  		title,
+  		contents
+  	FROM
+  		board
+  	WHERE
+  		boardid = #{id}
+  </select>
+  <update id="updateContentById" parameterType="Content">
+  	UPDATE
+  		board
+  	SET
+  		title = #{title},
+  		contents = #{contents}
+  	WHERE
+  		boardid = #{boardId}
+  </update>
+  <select id="getLatestContent" resultType="Content">
+  	SELECT
+  		boardid as boardId,
+  		CASE 
+  			WHEN LENGTH(title) > 25 THEN CONCAT(LEFT(title, 25), '...')
+  			ELSE title
+  		END title
+  	FROM
+  		board
+  	WHERE
+		published = 1
+	ORDER BY
+  		board.created DESC
+  	LIMIT 5
+  </select>
+  <update id="updateContentHit" parameterType="Content">
+  	UPDATE
+  		board
+  	SET
+  		hits = hits + 1
+  	WHERE
+  		boardid = #{boardId}
+  </update>
+  <select id="getContentList" parameterType="Content" resultType="Content">
+  	SELECT
+  		boardid as boardId,
+  		CASE 
+  			WHEN LENGTH(title) > 50 THEN CONCAT(LEFT(title, 50), '...')
+  			ELSE title
+  		END title,
+  		DATE_FORMAT(created, '%Y.%m.%d %H:%i') created,
+  		creator,
+  		hits,
+  		(
+  			SELECT
+				COUNT(boardid) as CNT
+			FROM
+				board
+			WHERE
+				published = 1
+			<if test="searchWrd != null and searchWrd != ''">
+			AND
+				title LIKE CONCAT('%', #{searchWrd},'%')
+			</if>
+  		) as totalPages,
+  		#{pageIndex} as pageIndex
+  	FROM
+  		board
+  	WHERE
+		published = 1
+  	<if test="searchWrd != null and searchWrd != ''">
+	AND
+		title LIKE CONCAT('%', #{searchWrd},'%')
+	</if>
+  	ORDER BY
+  		board.created DESC
+  	LIMIT #{recordCountPerPage} OFFSET #{firstIndex}
+  </select>
+</mapper>
